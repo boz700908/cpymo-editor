@@ -50,6 +50,15 @@
             <Button Text="复制"
                     Command="{Binding DuplicateSelectedCommand}"
                     SemanticProperties.Description="复制当前选择的事件" />
+            <Button Text="删除"
+                    Command="{Binding DeleteSelectedCommand}"
+                    SemanticProperties.Description="删除当前选择的事件" />
+            <Button Text="上移"
+                    Command="{Binding MoveSelectedUpCommand}"
+                    SemanticProperties.Description="上移当前选择的事件" />
+            <Button Text="下移"
+                    Command="{Binding MoveSelectedDownCommand}"
+                    SemanticProperties.Description="下移当前选择的事件" />
         </HorizontalStackLayout>
     </Grid>
 </ContentPage>

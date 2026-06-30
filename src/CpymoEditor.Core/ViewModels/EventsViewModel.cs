@@ -28,6 +28,9 @@ public sealed class EventsViewModel
         NextPageCommand = new RelayCommand(NextPage, () => PageNumber < TotalPages);
         SelectEventCommand = new RelayCommand<EventRowViewModel>(SelectEvent);
         DuplicateSelectedCommand = new RelayCommand(DuplicateSelected, () => _selectedEvent is not null);
+        DeleteSelectedCommand = new RelayCommand(DeleteSelected, () => _selectedEvent is not null);
+        MoveSelectedUpCommand = new RelayCommand(MoveSelectedUp, () => _selectedEvent is not null && _selectedEvent.Index > 0);
+        MoveSelectedDownCommand = new RelayCommand(MoveSelectedDown, () => _selectedEvent is not null && _selectedEvent.Index < _document.Events.Count - 1);
         LoadPage(1);
     }
 
@@ -44,6 +47,12 @@ public sealed class EventsViewModel
     public ICommand SelectEventCommand { get; }
 
     public ICommand DuplicateSelectedCommand { get; }
+
+    public ICommand DeleteSelectedCommand { get; }
+
+    public ICommand MoveSelectedUpCommand { get; }
+
+    public ICommand MoveSelectedDownCommand { get; }
 
     private static EventDocument CreateSampleDocument()
     {
@@ -77,6 +86,8 @@ public sealed class EventsViewModel
         {
             duplicate.RaiseCanExecuteChanged();
         }
+
+        RaiseEventOperationCanExecuteChanged();
     }
 
     private void DuplicateSelected()
@@ -89,6 +100,48 @@ public sealed class EventsViewModel
         ScriptEvent item = _document.Events[_selectedEvent.Index];
         _document = EventDocumentEditor.Insert(_document, _selectedEvent.Index + 1, item);
         LoadPage(PageNumber);
+    }
+
+    private void DeleteSelected()
+    {
+        if (_selectedEvent is null)
+        {
+            return;
+        }
+
+        _document = EventDocumentEditor.Delete(_document, _selectedEvent.Index);
+        _selectedEvent = null;
+        LoadPage(PageNumber);
+    }
+
+    private void MoveSelectedUp()
+    {
+        MoveSelectedBy(-1);
+    }
+
+    private void MoveSelectedDown()
+    {
+        MoveSelectedBy(1);
+    }
+
+    private void MoveSelectedBy(int offset)
+    {
+        if (_selectedEvent is null)
+        {
+            return;
+        }
+
+        int fromIndex = _selectedEvent.Index;
+        int toIndex = fromIndex + offset;
+        if (toIndex < 0 || toIndex >= _document.Events.Count)
+        {
+            return;
+        }
+
+        _document = EventDocumentEditor.Move(_document, fromIndex, toIndex);
+        LoadPage(PageNumber);
+        EventRowViewModel? moved = Events.FirstOrDefault(item => item.Index == toIndex);
+        SelectEvent(moved);
     }
 
     private void LoadPage(int pageNumber)
@@ -117,6 +170,26 @@ public sealed class EventsViewModel
         if (DuplicateSelectedCommand is RelayCommand duplicate)
         {
             duplicate.RaiseCanExecuteChanged();
+        }
+
+        RaiseEventOperationCanExecuteChanged();
+    }
+
+    private void RaiseEventOperationCanExecuteChanged()
+    {
+        if (DeleteSelectedCommand is RelayCommand delete)
+        {
+            delete.RaiseCanExecuteChanged();
+        }
+
+        if (MoveSelectedUpCommand is RelayCommand moveUp)
+        {
+            moveUp.RaiseCanExecuteChanged();
+        }
+
+        if (MoveSelectedDownCommand is RelayCommand moveDown)
+        {
+            moveDown.RaiseCanExecuteChanged();
         }
     }
 
