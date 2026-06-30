@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/CpymoEditor.Core/CpymoEditor.Core.csproj" />
+    <Project Path="src/CpymoEditor.Tests/CpymoEditor.Tests.csproj" />
+  </Folder>
+</Solution>

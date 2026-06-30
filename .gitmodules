@@ -1,0 +1,6 @@
+[submodule "external/CPyMO"]
+	path = external/CPyMO
+	url = https://github.com/Strrationalism/CPyMO.git
+[submodule "external/YukimiScript"]
+	path = external/YukimiScript
+	url = https://github.com/Strrationalism/YukimiScript.git

@@ -1,1 +1,6 @@
 .worktrees/
+bin/
+obj/
+pymo_v1_2_0_tools/
+PYMO教程.md
+YukimiScript教程.md
