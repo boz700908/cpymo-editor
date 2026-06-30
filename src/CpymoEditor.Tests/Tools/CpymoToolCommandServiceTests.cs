@@ -70,6 +70,62 @@ public sealed class CpymoToolCommandServiceTests : IDisposable
         Assert.Equal(new[] { "resize-image", Path.Combine(input, "a.png"), Path.Combine(output, "a.png"), "1", "1", "--out-format", "png" }, runner.Calls[0].Arguments);
     }
 
+    [Fact]
+    public async Task AnalyzeAssetsAsync_ReportsMissingReferencedBackground()
+    {
+        string project = Path.Combine(_root, "game");
+        Directory.CreateDirectory(Path.Combine(project, "script"));
+        await File.WriteAllTextAsync(Path.Combine(project, "gameconfig.txt"), "scripttype,pymo\nbgformat,.jpg\nstartscript,start\n");
+        await File.WriteAllTextAsync(Path.Combine(project, "script", "start.txt"), "#bg BG001_H\n");
+
+        var service = new CpymoToolCommandService("cpymo-tool", new RecordingToolProcessRunner(new ToolProcessResult(0, "", "")));
+
+        ToolResult result = await service.AnalyzeAssetsAsync(project, CancellationToken.None);
+
+        Assert.False(result.Succeeded);
+        ToolProblem problem = Assert.Single(result.Problems);
+        Assert.Equal(ToolProblemSeverity.Error, problem.Severity);
+        Assert.Equal(Path.Combine(project, "script", "start.txt"), problem.File);
+        Assert.Equal(1, problem.Line);
+        Assert.Contains("BG001_H", problem.Message);
+    }
+
+    [Fact]
+    public async Task AnalyzeAssetsAsync_SucceedsWhenCommonReferencedAssetsExist()
+    {
+        string project = Path.Combine(_root, "game");
+        Directory.CreateDirectory(Path.Combine(project, "script"));
+        Directory.CreateDirectory(Path.Combine(project, "bg"));
+        Directory.CreateDirectory(Path.Combine(project, "bgm"));
+        Directory.CreateDirectory(Path.Combine(project, "chara"));
+        Directory.CreateDirectory(Path.Combine(project, "se"));
+        Directory.CreateDirectory(Path.Combine(project, "voice"));
+        await File.WriteAllTextAsync(
+            Path.Combine(project, "gameconfig.txt"),
+            "scripttype,pymo\nbgformat,.jpg\nbgmformat,.mp3\ncharaformat,.png\nseformat,.wav\nvoiceformat,.mp3\nstartscript,start\n");
+        await File.WriteAllTextAsync(
+            Path.Combine(project, "script", "start.txt"),
+            """
+            #bg BG001_H
+            #bgm BGM00
+            #chara 0,AY04BA,50,0,300
+            #se SE02
+            #vo PRO000
+            """);
+        await File.WriteAllTextAsync(Path.Combine(project, "bg", "BG001_H.jpg"), "fake");
+        await File.WriteAllTextAsync(Path.Combine(project, "bgm", "BGM00.mp3"), "fake");
+        await File.WriteAllTextAsync(Path.Combine(project, "chara", "AY04BA.png"), "fake");
+        await File.WriteAllTextAsync(Path.Combine(project, "se", "SE02.wav"), "fake");
+        await File.WriteAllTextAsync(Path.Combine(project, "voice", "PRO000.mp3"), "fake");
+
+        var service = new CpymoToolCommandService("cpymo-tool", new RecordingToolProcessRunner(new ToolProcessResult(0, "", "")));
+
+        ToolResult result = await service.AnalyzeAssetsAsync(project, CancellationToken.None);
+
+        Assert.True(result.Succeeded);
+        Assert.Empty(result.Problems);
+    }
+
     private sealed class RecordingToolProcessRunner(ToolProcessResult result) : IToolProcessRunner
     {
         public List<ToolProcessCall> Calls { get; } = [];
