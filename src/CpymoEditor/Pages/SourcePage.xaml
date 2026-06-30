@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:CpymoEditor.ViewModels;assembly=CpymoEditor.Core"
              x:Class="CpymoEditor.Pages.SourcePage"
+             x:DataType="viewModels:SourceViewModel"
              Title="源码"
              SemanticProperties.Description="源码">
     <Grid RowDefinitions="Auto,*" Padding="16" RowSpacing="12">
@@ -10,9 +12,10 @@
                FontAttributes="Bold"
                SemanticProperties.HeadingLevel="Level1" />
         <Editor Grid.Row="1"
+                Text="{Binding SourceText}"
                 AutoSize="TextChanges"
-                IsReadOnly="True"
+                IsReadOnly="{Binding IsReadOnly}"
                 Placeholder="高级源码视图会显示在这里。"
-                SemanticProperties.Description="高级源码视图" />
+                SemanticProperties.Description="{Binding AccessibleDescription}" />
     </Grid>
 </ContentPage>
