@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:CpymoEditor.ViewModels;assembly=CpymoEditor.Core"
              x:Class="CpymoEditor.Pages.ConfigPage"
+             x:DataType="viewModels:ConfigViewModel"
              Title="配置"
              SemanticProperties.Description="工程配置">
     <ScrollView>
@@ -10,10 +12,27 @@
                    FontSize="24"
                    FontAttributes="Bold"
                    SemanticProperties.HeadingLevel="Level1" />
-            <Entry Placeholder="游戏标题" SemanticProperties.Description="游戏标题" />
-            <Entry Placeholder="开始脚本" SemanticProperties.Description="开始脚本" />
-            <Entry Placeholder="背景尺寸，例如 540,360" SemanticProperties.Description="背景尺寸" />
-            <Button Text="保存配置" SemanticProperties.Description="保存工程配置" />
+            <Label Text="游戏标题" />
+            <Entry Text="{Binding GameTitle}"
+                   Placeholder="游戏标题"
+                   SemanticProperties.Description="游戏标题" />
+            <Label Text="脚本类型" />
+            <Entry Text="{Binding ScriptType}"
+                   Placeholder="pymo"
+                   SemanticProperties.Description="脚本类型" />
+            <Label Text="开始脚本" />
+            <Entry Text="{Binding StartScript}"
+                   Placeholder="start"
+                   SemanticProperties.Description="开始脚本" />
+            <Label Text="背景格式" />
+            <Entry Text="{Binding BackgroundFormat}"
+                   Placeholder=".jpg"
+                   SemanticProperties.Description="背景图片格式" />
+            <Button Text="保存配置"
+                    Command="{Binding SaveCommand}"
+                    SemanticProperties.Description="保存工程配置" />
+            <Label Text="{Binding SaveStatus}"
+                   SemanticProperties.Description="{Binding SaveStatus}" />
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
