@@ -1,5 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\external\YukimiScript\YukimiScript.Parser\YukimiScript.Parser.fsproj" />
+    <ProjectReference Include="..\..\external\YukimiScript\YukimiScript.CodeGen\YukimiScript.CodeGen.fsproj" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
