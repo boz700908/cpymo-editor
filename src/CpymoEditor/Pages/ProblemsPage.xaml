@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:CpymoEditor.ViewModels;assembly=CpymoEditor.Core"
              x:Class="CpymoEditor.Pages.ProblemsPage"
+             x:DataType="viewModels:ProblemsViewModel"
              Title="问题"
              SemanticProperties.Description="问题列表">
     <Grid RowDefinitions="Auto,*" Padding="16" RowSpacing="12">
@@ -10,7 +12,28 @@
                FontAttributes="Bold"
                SemanticProperties.HeadingLevel="Level1" />
         <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding Problems}"
                         EmptyView="编译错误、资源缺失和校验警告会显示在这里。"
-                        SemanticProperties.Description="问题列表" />
+                        SemanticProperties.Description="问题列表">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="viewModels:ProblemRowViewModel">
+                    <Grid Padding="12"
+                          RowDefinitions="Auto,Auto"
+                          ColumnDefinitions="72,*"
+                          SemanticProperties.Description="{Binding AccessibleName}">
+                        <Label Text="{Binding Severity}"
+                               FontAttributes="Bold"
+                               VerticalOptions="Start" />
+                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                            <Label Text="{Binding Message}"
+                                   LineBreakMode="WordWrap" />
+                            <Label Text="{Binding Location}"
+                                   FontSize="12"
+                                   LineBreakMode="MiddleTruncation" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
     </Grid>
 </ContentPage>
