@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CpymoEditor.Pages.EventsPage"
+             Title="事件"
+             SemanticProperties.Description="事件列表">
+    <Grid RowDefinitions="Auto,*,Auto" Padding="16" RowSpacing="12">
+        <Label Text="事件"
+               FontSize="24"
+               FontAttributes="Bold"
+               SemanticProperties.HeadingLevel="Level1" />
+        <CollectionView Grid.Row="1"
+                        EmptyView="打开脚本文件后，这里会分页显示线性事件列表。"
+                        SemanticProperties.Description="分页事件列表" />
+        <HorizontalStackLayout Grid.Row="2" Spacing="8">
+            <Button Text="上一页" SemanticProperties.Description="上一页事件" />
+            <Button Text="下一页" SemanticProperties.Description="下一页事件" />
+            <Button Text="跳转" SemanticProperties.Description="跳转到标签或页码" />
+        </HorizontalStackLayout>
+    </Grid>
+</ContentPage>

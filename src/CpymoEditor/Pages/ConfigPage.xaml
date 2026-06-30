@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CpymoEditor.Pages.ConfigPage"
+             Title="配置"
+             SemanticProperties.Description="工程配置">
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="12">
+            <Label Text="配置"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   SemanticProperties.HeadingLevel="Level1" />
+            <Entry Placeholder="游戏标题" SemanticProperties.Description="游戏标题" />
+            <Entry Placeholder="开始脚本" SemanticProperties.Description="开始脚本" />
+            <Entry Placeholder="背景尺寸，例如 540,360" SemanticProperties.Description="背景尺寸" />
+            <Button Text="保存配置" SemanticProperties.Description="保存工程配置" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

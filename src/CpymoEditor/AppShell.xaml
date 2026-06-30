@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="CpymoEditor.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="clr-namespace:CpymoEditor.Pages"
+    Title="CPyMO Editor">
+
+    <TabBar>
+        <ShellContent
+            Title="事件"
+            ContentTemplate="{DataTemplate pages:EventsPage}"
+            Route="EventsPage" />
+        <ShellContent
+            Title="添加"
+            ContentTemplate="{DataTemplate pages:AddEventPage}"
+            Route="AddEventPage" />
+        <ShellContent
+            Title="素材"
+            ContentTemplate="{DataTemplate pages:AssetsPage}"
+            Route="AssetsPage" />
+        <ShellContent
+            Title="配置"
+            ContentTemplate="{DataTemplate pages:ConfigPage}"
+            Route="ConfigPage" />
+        <ShellContent
+            Title="问题"
+            ContentTemplate="{DataTemplate pages:ProblemsPage}"
+            Route="ProblemsPage" />
+        <ShellContent
+            Title="工具"
+            ContentTemplate="{DataTemplate pages:ToolsPage}"
+            Route="ToolsPage" />
+        <ShellContent
+            Title="源码"
+            ContentTemplate="{DataTemplate pages:SourcePage}"
+            Route="SourcePage" />
+    </TabBar>
+
+</Shell>

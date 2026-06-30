@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CpymoEditor.Pages.AssetsPage"
+             Title="素材"
+             SemanticProperties.Description="素材库">
+    <Grid RowDefinitions="Auto,*" Padding="16" RowSpacing="12">
+        <Label Text="素材库"
+               FontSize="24"
+               FontAttributes="Bold"
+               SemanticProperties.HeadingLevel="Level1" />
+        <CollectionView Grid.Row="1"
+                        EmptyView="打开工程后，这里会按背景、立绘、音乐、音效、语音、视频和系统图片分类显示素材。"
+                        SemanticProperties.Description="素材分类列表" />
+    </Grid>
+</ContentPage>

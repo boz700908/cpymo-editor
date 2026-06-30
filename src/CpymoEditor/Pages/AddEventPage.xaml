@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CpymoEditor.Pages.AddEventPage"
+             Title="添加"
+             SemanticProperties.Description="添加事件">
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="12">
+            <Label Text="添加事件"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   SemanticProperties.HeadingLevel="Level1" />
+            <Button Text="文本事件" SemanticProperties.Description="添加文本或对话事件" />
+            <Button Text="图像事件" SemanticProperties.Description="添加背景或立绘事件" />
+            <Button Text="声音事件" SemanticProperties.Description="添加背景音乐音效或语音事件" />
+            <Button Text="变量和跳转" SemanticProperties.Description="添加变量赋值条件或跳转事件" />
+            <Button Text="选择菜单" SemanticProperties.Description="添加选择菜单事件" />
+            <Button Text="系统事件" SemanticProperties.Description="添加系统事件" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

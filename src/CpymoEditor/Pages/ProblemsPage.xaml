@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CpymoEditor.Pages.ProblemsPage"
+             Title="问题"
+             SemanticProperties.Description="问题列表">
+    <Grid RowDefinitions="Auto,*" Padding="16" RowSpacing="12">
+        <Label Text="问题"
+               FontSize="24"
+               FontAttributes="Bold"
+               SemanticProperties.HeadingLevel="Level1" />
+        <CollectionView Grid.Row="1"
+                        EmptyView="编译错误、资源缺失和校验警告会显示在这里。"
+                        SemanticProperties.Description="问题列表" />
+    </Grid>
+</ContentPage>
