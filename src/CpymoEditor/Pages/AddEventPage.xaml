@@ -37,6 +37,24 @@
             </CollectionView>
             <Label Text="{Binding SelectedEventName, StringFormat='已选择：{0}'}"
                    SemanticProperties.Description="{Binding SelectedEventName, StringFormat='当前选择的事件是 {0}'}" />
+            <VerticalStackLayout IsVisible="{Binding IsTextEventSelected}"
+                                 Spacing="8"
+                                 SemanticProperties.Description="文本事件参数">
+                <Label Text="说话人" />
+                <Entry Text="{Binding Speaker}"
+                       Placeholder="旁白可留空"
+                       SemanticProperties.Description="说话人" />
+                <Label Text="文本" />
+                <Editor Text="{Binding Text}"
+                        AutoSize="TextChanges"
+                        Placeholder="输入台词或旁白文本"
+                        SemanticProperties.Description="文本内容" />
+                <Button Text="创建事件"
+                        Command="{Binding CreateEventCommand}"
+                        SemanticProperties.Description="根据当前参数创建事件" />
+            </VerticalStackLayout>
+            <Label Text="{Binding StatusMessage}"
+                   SemanticProperties.Description="{Binding StatusMessage}" />
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

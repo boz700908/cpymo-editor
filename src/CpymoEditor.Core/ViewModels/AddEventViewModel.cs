@@ -1,11 +1,17 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows.Input;
+using CpymoEditor.Core.Events;
 
 namespace CpymoEditor.ViewModels;
 
 public sealed class AddEventViewModel : INotifyPropertyChanged
 {
     private string _selectedEventName = string.Empty;
+    private string _speaker = string.Empty;
+    private string _text = string.Empty;
+    private string _statusMessage = string.Empty;
+    private ScriptEvent? _createdEvent;
 
     public AddEventViewModel()
     {
@@ -46,11 +52,15 @@ public sealed class AddEventViewModel : INotifyPropertyChanged
                 Template("宏或扩展", "保留或添加 YukimiScript 宏调用")
             ])
         ];
+
+        CreateEventCommand = new RelayCommand(CreateEvent, () => SelectedEventName == "对话" || SelectedEventName == "旁白");
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
     public ObservableCollection<AddEventCategoryViewModel> Categories { get; }
+
+    public ICommand CreateEventCommand { get; }
 
     public string SelectedEventName
     {
@@ -64,7 +74,38 @@ public sealed class AddEventViewModel : INotifyPropertyChanged
 
             _selectedEventName = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedEventName)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsTextEventSelected)));
+            if (CreateEventCommand is RelayCommand command)
+            {
+                command.RaiseCanExecuteChanged();
+            }
         }
+    }
+
+    public bool IsTextEventSelected => SelectedEventName is "对话" or "旁白";
+
+    public string Speaker
+    {
+        get => _speaker;
+        set => SetField(ref _speaker, value);
+    }
+
+    public string Text
+    {
+        get => _text;
+        set => SetField(ref _text, value);
+    }
+
+    public ScriptEvent? CreatedEvent
+    {
+        get => _createdEvent;
+        private set => SetField(ref _createdEvent, value);
+    }
+
+    public string StatusMessage
+    {
+        get => _statusMessage;
+        private set => SetField(ref _statusMessage, value);
     }
 
     private AddEventCategoryViewModel Category(string name, AddEventTemplateViewModel[] events)
@@ -75,5 +116,32 @@ public sealed class AddEventViewModel : INotifyPropertyChanged
     private AddEventTemplateViewModel Template(string name, string description)
     {
         return new AddEventTemplateViewModel(name, description, template => SelectedEventName = template.Name);
+    }
+
+    private void CreateEvent()
+    {
+        if (SelectedEventName == "对话")
+        {
+            CreatedEvent = ScriptEventFactory.Dialogue(Speaker, Text);
+            StatusMessage = "已创建事件：对话";
+            return;
+        }
+
+        if (SelectedEventName == "旁白")
+        {
+            CreatedEvent = ScriptEventFactory.Dialogue(string.Empty, Text);
+            StatusMessage = "已创建事件：旁白";
+        }
+    }
+
+    private void SetField<T>(ref T field, T value, [System.Runtime.CompilerServices.CallerMemberName] string? propertyName = null)
+    {
+        if (EqualityComparer<T>.Default.Equals(field, value))
+        {
+            return;
+        }
+
+        field = value;
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

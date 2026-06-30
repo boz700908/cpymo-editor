@@ -18,4 +18,22 @@ public sealed class AddEventViewModelTests
             viewModel.Categories.SelectMany(category => category.Events),
             item => Assert.False(string.IsNullOrWhiteSpace(item.AccessibleName)));
     }
+
+    [Fact]
+    public void CreateEventCommand_BuildsDialogueEventFromGraphicalParameters()
+    {
+        var viewModel = new AddEventViewModel();
+        AddEventTemplateViewModel dialogue = viewModel.Categories
+            .SelectMany(category => category.Events)
+            .Single(item => item.Name == "对话");
+
+        dialogue.SelectCommand.Execute(null);
+        viewModel.Speaker = "智也";
+        viewModel.Text = "你好";
+        viewModel.CreateEventCommand.Execute(null);
+
+        Assert.NotNull(viewModel.CreatedEvent);
+        Assert.Equal("#say 智也,你好", viewModel.CreatedEvent.RawText);
+        Assert.Equal("已创建事件：对话", viewModel.StatusMessage);
+    }
 }
