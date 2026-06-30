@@ -35,6 +35,15 @@ Windows:
 dotnet build .\src\CpymoEditor\CpymoEditor.csproj -f net9.0-windows10.0.19041.0
 ```
 
+CPyMO tool for Windows:
+
+```powershell
+.\tools\bootstrap.ps1
+.\tools\build-cpymo-tool-win.ps1
+```
+
+The generated executable is written to `artifacts/cpymo-tool/win/cpymo-tool.exe`.
+
 Android:
 
 ```powershell

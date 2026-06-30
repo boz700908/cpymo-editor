@@ -1,0 +1,22 @@
+diff --git a/cpymo-tool/cpymo_tool_ffmpeg.c b/cpymo-tool/cpymo_tool_ffmpeg.c
+--- a/cpymo-tool/cpymo_tool_ffmpeg.c
++++ b/cpymo-tool/cpymo_tool_ffmpeg.c
+@@ -1,6 +1,7 @@
+ #include "cpymo_tool_prelude.h"
+ #include "cpymo_tool_ffmpeg.h"
+ #include <stdio.h>
+ #include <string.h>
++#include <stdlib.h>
+ 
+ error_t cpymo_tool_ffmpeg_search(const char **out_ffmpeg_command)
+diff --git a/cpymo-tool/cpymo_tool_gameconfig.c b/cpymo-tool/cpymo_tool_gameconfig.c
+--- a/cpymo-tool/cpymo_tool_gameconfig.c
++++ b/cpymo-tool/cpymo_tool_gameconfig.c
+@@ -1,6 +1,7 @@
+ #include "cpymo_tool_prelude.h"
+ #include "cpymo_tool_gameconfig.h"
+ #include <stdio.h>
+ #include <string.h>
++#include <stdlib.h>
+ 
+ static error_t cpymo_tool_str_replace_n(char **out_str, const char *str)

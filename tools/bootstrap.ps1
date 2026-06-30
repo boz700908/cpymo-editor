@@ -7,15 +7,20 @@ $ErrorActionPreference = "Stop"
 git submodule update --init --recursive external/CPyMO external/YukimiScript
 
 if (-not $SkipPatch) {
-    $patchRoots = @("patches/cpymo", "patches/yukimiscript")
-    foreach ($patchRoot in $patchRoots) {
-        if (-not (Test-Path $patchRoot)) {
+    $patchSets = @(
+        @{ Root = "patches/cpymo"; Repository = "external/CPyMO" },
+        @{ Root = "patches/yukimiscript"; Repository = "external/YukimiScript" }
+    )
+
+    foreach ($patchSet in $patchSets) {
+        if (-not (Test-Path $patchSet.Root)) {
             continue
         }
 
-        Get-ChildItem -Path $patchRoot -Filter "*.patch" | Sort-Object Name | ForEach-Object {
-            git apply --check $_.FullName
-            git apply $_.FullName
+        Get-ChildItem -Path $patchSet.Root -Filter "*.patch" | Sort-Object Name | ForEach-Object {
+            $patchPath = Resolve-Path $_.FullName
+            git -C $patchSet.Repository apply --check $patchPath
+            git -C $patchSet.Repository apply $patchPath
         }
     }
 }
