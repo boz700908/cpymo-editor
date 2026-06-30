@@ -1,20 +1,36 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:CpymoEditor.ViewModels;assembly=CpymoEditor.Core"
              x:Class="CpymoEditor.Pages.ToolsPage"
+             x:DataType="viewModels:ToolsViewModel"
              Title="工具"
              SemanticProperties.Description="工具">
-    <ScrollView>
-        <VerticalStackLayout Padding="16" Spacing="12">
-            <Label Text="工具"
-                   FontSize="24"
-                   FontAttributes="Bold"
-                   SemanticProperties.HeadingLevel="Level1" />
-            <Button Text="编译 YKM" SemanticProperties.Description="编译 YukimiScript 到 PyMO 脚本" />
-            <Button Text="检查资源" SemanticProperties.Description="检查资源引用和缺失文件" />
-            <Button Text="转换图片" SemanticProperties.Description="转换图片和遮罩格式" />
-            <Button Text="打包工程" SemanticProperties.Description="打包 CPyMO 工程" />
-            <Button Text="用 CPyMO 运行" SemanticProperties.Description="用 CPyMO 运行当前工程" />
-        </VerticalStackLayout>
-    </ScrollView>
+    <Grid RowDefinitions="Auto,*" Padding="16" RowSpacing="12">
+        <Label Text="工具"
+               FontSize="24"
+               FontAttributes="Bold"
+               SemanticProperties.HeadingLevel="Level1" />
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding Tools}"
+                        SemanticProperties.Description="工具命令列表">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="viewModels:ToolCommandViewModel">
+                    <Grid Padding="12"
+                          RowDefinitions="Auto,Auto,Auto"
+                          SemanticProperties.Description="{Binding AccessibleName}">
+                        <Label Text="{Binding Name}"
+                               FontAttributes="Bold" />
+                        <Label Grid.Row="1"
+                               Text="{Binding Description}"
+                               LineBreakMode="WordWrap" />
+                        <HorizontalStackLayout Grid.Row="2" Spacing="12">
+                            <Label Text="{Binding Platforms}" FontSize="12" />
+                            <Label Text="{Binding Status}" FontSize="12" />
+                        </HorizontalStackLayout>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
 </ContentPage>
