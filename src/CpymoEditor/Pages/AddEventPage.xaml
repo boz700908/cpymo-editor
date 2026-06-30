@@ -1,21 +1,42 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:CpymoEditor.ViewModels;assembly=CpymoEditor.Core"
              x:Class="CpymoEditor.Pages.AddEventPage"
+             x:DataType="viewModels:AddEventViewModel"
              Title="添加"
              SemanticProperties.Description="添加事件">
     <ScrollView>
-        <VerticalStackLayout Padding="16" Spacing="12">
+        <VerticalStackLayout Padding="16" Spacing="16">
             <Label Text="添加事件"
                    FontSize="24"
                    FontAttributes="Bold"
                    SemanticProperties.HeadingLevel="Level1" />
-            <Button Text="文本事件" SemanticProperties.Description="添加文本或对话事件" />
-            <Button Text="图像事件" SemanticProperties.Description="添加背景或立绘事件" />
-            <Button Text="声音事件" SemanticProperties.Description="添加背景音乐音效或语音事件" />
-            <Button Text="变量和跳转" SemanticProperties.Description="添加变量赋值条件或跳转事件" />
-            <Button Text="选择菜单" SemanticProperties.Description="添加选择菜单事件" />
-            <Button Text="系统事件" SemanticProperties.Description="添加系统事件" />
+            <CollectionView ItemsSource="{Binding Categories}"
+                            SemanticProperties.Description="事件类型分类">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="viewModels:AddEventCategoryViewModel">
+                        <VerticalStackLayout Spacing="8" Padding="0,0,0,16">
+                            <Label Text="{Binding Name}"
+                                   FontSize="18"
+                                   FontAttributes="Bold"
+                                   SemanticProperties.HeadingLevel="Level2" />
+                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Events}"
+                                                 Spacing="8">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="viewModels:AddEventTemplateViewModel">
+                                        <Button Text="{Binding Name}"
+                                                Command="{Binding SelectCommand}"
+                                                SemanticProperties.Description="{Binding AccessibleName}" />
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <Label Text="{Binding SelectedEventName, StringFormat='已选择：{0}'}"
+                   SemanticProperties.Description="{Binding SelectedEventName, StringFormat='当前选择的事件是 {0}'}" />
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
