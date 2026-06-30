@@ -1,5 +1,7 @@
 namespace CpymoEditor.Core.Tools;
 
+using CpymoEditor.Core.Configuration;
+
 public sealed class CpymoToolCommandService : ICpymoToolService
 {
     private static readonly HashSet<string> SupportedImageExtensions = new(StringComparer.OrdinalIgnoreCase)
@@ -150,9 +152,20 @@ public sealed class CpymoToolCommandService : ICpymoToolService
                 new ToolProblem(ToolProblemSeverity.Error, "gameconfig.txt does not exist.", gameConfigPath)));
         }
 
-        string[] lines = File.ReadAllLines(gameConfigPath);
-        bool hasScriptType = lines.Any(line => line.StartsWith("scripttype,", StringComparison.Ordinal));
-        bool hasStartScript = lines.Any(line => line.StartsWith("startscript,", StringComparison.Ordinal));
+        GameConfigDocument document;
+        try
+        {
+            document = GameConfigDocument.Parse(File.ReadAllText(gameConfigPath));
+        }
+        catch (FormatException exception)
+        {
+            return Task.FromResult(ToolResult.Failure(
+                "gameconfig-validate",
+                new ToolProblem(ToolProblemSeverity.Error, exception.Message, gameConfigPath)));
+        }
+
+        bool hasScriptType = document.GetValue("scripttype") is not null;
+        bool hasStartScript = document.GetValue("startscript") is not null;
 
         var problems = new List<ToolProblem>();
         if (!hasScriptType)

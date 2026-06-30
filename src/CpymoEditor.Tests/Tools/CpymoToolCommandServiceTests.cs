@@ -52,6 +52,19 @@ public sealed class CpymoToolCommandServiceTests : IDisposable
     }
 
     [Fact]
+    public async Task ValidateGameConfigAsync_FailsWhenConfigFormatIsInvalid()
+    {
+        string gameConfig = Path.Combine(_root, "gameconfig.txt");
+        await File.WriteAllTextAsync(gameConfig, "scripttype, pymo\n");
+        var service = new CpymoToolCommandService("cpymo-tool", new RecordingToolProcessRunner(new ToolProcessResult(0, "", "")));
+
+        ToolResult result = await service.ValidateGameConfigAsync(gameConfig, CancellationToken.None);
+
+        Assert.False(result.Succeeded);
+        Assert.Contains(result.Problems, problem => problem.Message.Contains("Spaces around comma", StringComparison.Ordinal));
+    }
+
+    [Fact]
     public async Task ConvertImagesAsync_ConvertsEverySupportedImageThroughResizeImage()
     {
         string input = Path.Combine(_root, "input");
