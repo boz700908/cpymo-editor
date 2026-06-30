@@ -33,4 +33,18 @@ public sealed class EventsViewModelTests
 
         Assert.Equal(1, viewModel.PageNumber);
     }
+
+    [Fact]
+    public void DuplicateCommand_DuplicatesSelectedEventAfterExplicitAction()
+    {
+        var viewModel = new EventsViewModel(pageSize: 20);
+        int initialCount = viewModel.Events.Count;
+
+        viewModel.SelectEventCommand.Execute(viewModel.Events[0]);
+        viewModel.DuplicateSelectedCommand.Execute(null);
+
+        Assert.Equal(initialCount + 1, viewModel.Events.Count);
+        Assert.Equal(viewModel.Events[0].Summary, viewModel.Events[1].Summary);
+        Assert.False(string.IsNullOrWhiteSpace(viewModel.Events[1].AccessibleName));
+    }
 }

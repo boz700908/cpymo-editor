@@ -23,11 +23,17 @@
                 <DataTemplate x:DataType="viewModels:EventRowViewModel">
                     <Grid Padding="8"
                           RowDefinitions="Auto,Auto"
+                          ColumnDefinitions="*,Auto"
                           SemanticProperties.Description="{Binding AccessibleName}">
                         <Label Text="{Binding Kind}"
                                FontAttributes="Bold" />
                         <Label Grid.Row="1"
                                Text="{Binding Summary}" />
+                        <Button Grid.Column="1"
+                                Grid.RowSpan="2"
+                                Text="选择"
+                                Command="{Binding SelectCommand}"
+                                SemanticProperties.Description="{Binding AccessibleName, StringFormat='选择事件：{0}'}" />
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
@@ -39,7 +45,11 @@
             <Button Text="下一页"
                     Command="{Binding NextPageCommand}"
                     SemanticProperties.Description="下一页事件" />
-            <Button Text="跳转" SemanticProperties.Description="跳转到标签或页码" />
+            <Button Text="跳转"
+                    SemanticProperties.Description="跳转到标签或页码" />
+            <Button Text="复制"
+                    Command="{Binding DuplicateSelectedCommand}"
+                    SemanticProperties.Description="复制当前选择的事件" />
         </HorizontalStackLayout>
     </Grid>
 </ContentPage>

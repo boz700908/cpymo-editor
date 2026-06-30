@@ -1,13 +1,14 @@
 using System.Collections.ObjectModel;
-using CpymoEditor.Core.Events;
 using System.Windows.Input;
+using CpymoEditor.Core.Events;
 
 namespace CpymoEditor.ViewModels;
 
 public sealed class EventsViewModel
 {
-    private readonly EventDocument _document;
+    private EventDocument _document;
     private readonly int _pageSize;
+    private EventRowViewModel? _selectedEvent;
 
     public EventsViewModel()
         : this(20)
@@ -31,6 +32,8 @@ public sealed class EventsViewModel
 
         PreviousPageCommand = new RelayCommand(PreviousPage, () => PageNumber > 1);
         NextPageCommand = new RelayCommand(NextPage, () => PageNumber < TotalPages);
+        SelectEventCommand = new RelayCommand<EventRowViewModel>(SelectEvent);
+        DuplicateSelectedCommand = new RelayCommand(DuplicateSelected, () => _selectedEvent is not null);
         LoadPage(1);
     }
 
@@ -44,6 +47,10 @@ public sealed class EventsViewModel
 
     public ICommand NextPageCommand { get; }
 
+    public ICommand SelectEventCommand { get; }
+
+    public ICommand DuplicateSelectedCommand { get; }
+
     private void PreviousPage()
     {
         LoadPage(Math.Max(1, PageNumber - 1));
@@ -54,6 +61,27 @@ public sealed class EventsViewModel
         LoadPage(Math.Min(TotalPages, PageNumber + 1));
     }
 
+    private void SelectEvent(EventRowViewModel? item)
+    {
+        _selectedEvent = item;
+        if (DuplicateSelectedCommand is RelayCommand duplicate)
+        {
+            duplicate.RaiseCanExecuteChanged();
+        }
+    }
+
+    private void DuplicateSelected()
+    {
+        if (_selectedEvent is null)
+        {
+            return;
+        }
+
+        ScriptEvent item = _document.Events[_selectedEvent.Index];
+        _document = EventDocumentEditor.Insert(_document, _selectedEvent.Index + 1, item);
+        LoadPage(PageNumber);
+    }
+
     private void LoadPage(int pageNumber)
     {
         EventPage page = EventPaginator.Paginate(_document, pageNumber, _pageSize);
@@ -61,9 +89,10 @@ public sealed class EventsViewModel
         TotalPages = page.TotalPages;
         Events.Clear();
 
-        foreach (ScriptEvent item in page.Events)
+        int firstIndex = (page.PageNumber - 1) * page.PageSize;
+        for (int index = 0; index < page.Events.Count; index++)
         {
-            Events.Add(ToRow(item));
+            Events.Add(ToRow(page.Events[index], firstIndex + index));
         }
 
         if (PreviousPageCommand is RelayCommand previous)
@@ -75,9 +104,14 @@ public sealed class EventsViewModel
         {
             next.RaiseCanExecuteChanged();
         }
+
+        if (DuplicateSelectedCommand is RelayCommand duplicate)
+        {
+            duplicate.RaiseCanExecuteChanged();
+        }
     }
 
-    private static EventRowViewModel ToRow(ScriptEvent item)
+    private EventRowViewModel ToRow(ScriptEvent item, int index)
     {
         string kind = item.Kind switch
         {
@@ -97,6 +131,6 @@ public sealed class EventsViewModel
             _ => item.RawText
         };
 
-        return new EventRowViewModel(kind, summary, kind + "，" + summary);
+        return new EventRowViewModel(index, kind, summary, kind + "：" + summary, SelectEvent);
     }
 }
