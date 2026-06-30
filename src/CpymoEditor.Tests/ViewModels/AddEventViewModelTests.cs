@@ -36,4 +36,23 @@ public sealed class AddEventViewModelTests
         Assert.Equal("#say 智也,你好", viewModel.CreatedEvent.RawText);
         Assert.Equal("已创建事件：对话", viewModel.StatusMessage);
     }
+
+    [Fact]
+    public void CreateEventCommand_BuildsBackgroundEventFromGraphicalParameters()
+    {
+        var viewModel = new AddEventViewModel();
+        AddEventTemplateViewModel background = viewModel.Categories
+            .SelectMany(category => category.Events)
+            .Single(item => item.Name == "背景");
+
+        background.SelectCommand.Execute(null);
+        viewModel.AssetName = "BG001_H";
+        viewModel.Transition = "BG_FADE";
+        viewModel.DurationMilliseconds = 500;
+        viewModel.CreateEventCommand.Execute(null);
+
+        Assert.NotNull(viewModel.CreatedEvent);
+        Assert.Equal("#bg BG001_H,BG_FADE,500", viewModel.CreatedEvent.RawText);
+        Assert.Equal("已创建事件：背景", viewModel.StatusMessage);
+    }
 }

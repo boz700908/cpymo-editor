@@ -10,6 +10,9 @@ public sealed class AddEventViewModel : INotifyPropertyChanged
     private string _selectedEventName = string.Empty;
     private string _speaker = string.Empty;
     private string _text = string.Empty;
+    private string _assetName = string.Empty;
+    private string _transition = string.Empty;
+    private int _durationMilliseconds;
     private string _statusMessage = string.Empty;
     private ScriptEvent? _createdEvent;
 
@@ -53,7 +56,7 @@ public sealed class AddEventViewModel : INotifyPropertyChanged
             ])
         ];
 
-        CreateEventCommand = new RelayCommand(CreateEvent, () => SelectedEventName == "对话" || SelectedEventName == "旁白");
+        CreateEventCommand = new RelayCommand(CreateEvent, () => SelectedEventName is "对话" or "旁白" or "背景");
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -75,6 +78,7 @@ public sealed class AddEventViewModel : INotifyPropertyChanged
             _selectedEventName = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedEventName)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsTextEventSelected)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsBackgroundEventSelected)));
             if (CreateEventCommand is RelayCommand command)
             {
                 command.RaiseCanExecuteChanged();
@@ -83,6 +87,8 @@ public sealed class AddEventViewModel : INotifyPropertyChanged
     }
 
     public bool IsTextEventSelected => SelectedEventName is "对话" or "旁白";
+
+    public bool IsBackgroundEventSelected => SelectedEventName == "背景";
 
     public string Speaker
     {
@@ -94,6 +100,24 @@ public sealed class AddEventViewModel : INotifyPropertyChanged
     {
         get => _text;
         set => SetField(ref _text, value);
+    }
+
+    public string AssetName
+    {
+        get => _assetName;
+        set => SetField(ref _assetName, value);
+    }
+
+    public string Transition
+    {
+        get => _transition;
+        set => SetField(ref _transition, value);
+    }
+
+    public int DurationMilliseconds
+    {
+        get => _durationMilliseconds;
+        set => SetField(ref _durationMilliseconds, value);
     }
 
     public ScriptEvent? CreatedEvent
@@ -131,6 +155,16 @@ public sealed class AddEventViewModel : INotifyPropertyChanged
         {
             CreatedEvent = ScriptEventFactory.Dialogue(string.Empty, Text);
             StatusMessage = "已创建事件：旁白";
+            return;
+        }
+
+        if (SelectedEventName == "背景")
+        {
+            CreatedEvent = ScriptEventFactory.Background(
+                AssetName,
+                string.IsNullOrWhiteSpace(Transition) ? null : Transition,
+                DurationMilliseconds > 0 ? DurationMilliseconds : null);
+            StatusMessage = "已创建事件：背景";
         }
     }
 

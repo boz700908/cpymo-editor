@@ -53,6 +53,26 @@
                         Command="{Binding CreateEventCommand}"
                         SemanticProperties.Description="根据当前参数创建事件" />
             </VerticalStackLayout>
+            <VerticalStackLayout IsVisible="{Binding IsBackgroundEventSelected}"
+                                 Spacing="8"
+                                 SemanticProperties.Description="背景事件参数">
+                <Label Text="背景素材" />
+                <Entry Text="{Binding AssetName}"
+                       Placeholder="例如 BG001_H"
+                       SemanticProperties.Description="背景素材" />
+                <Label Text="转场" />
+                <Entry Text="{Binding Transition}"
+                       Placeholder="例如 BG_FADE"
+                       SemanticProperties.Description="背景转场" />
+                <Label Text="持续时间，毫秒" />
+                <Entry Text="{Binding DurationMilliseconds}"
+                       Keyboard="Numeric"
+                       Placeholder="例如 500"
+                       SemanticProperties.Description="背景持续时间，毫秒" />
+                <Button Text="创建事件"
+                        Command="{Binding CreateEventCommand}"
+                        SemanticProperties.Description="根据当前背景参数创建事件" />
+            </VerticalStackLayout>
             <Label Text="{Binding StatusMessage}"
                    SemanticProperties.Description="{Binding StatusMessage}" />
         </VerticalStackLayout>
