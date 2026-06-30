@@ -20,6 +20,11 @@ public sealed class ProblemsViewModel
 
     public ObservableCollection<ProblemRowViewModel> Problems { get; } = [];
 
+    public static ProblemsViewModel FromMessages(IEnumerable<string> messages)
+    {
+        return new ProblemsViewModel(messages.Select(message => ToRow(ToolProblemSeverity.Error, message, null, null)));
+    }
+
     public static ProblemsViewModel FromToolProblems(IEnumerable<ToolProblem> problems)
     {
         return new ProblemsViewModel(problems.Select(problem => ToRow(

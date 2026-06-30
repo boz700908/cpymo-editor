@@ -16,20 +16,14 @@ public sealed class EventsViewModel
     }
 
     public EventsViewModel(int pageSize)
+        : this(CreateSampleDocument(), pageSize)
+    {
+    }
+
+    public EventsViewModel(EventDocument document, int pageSize = 20)
     {
         _pageSize = pageSize;
-        _document = PymoScriptParser.Parse(
-            "script/start.txt",
-            """
-            #say 旁白,欢迎使用 CPyMO Editor
-            #bg BG001_H,BG_FADE,500
-            #bgm BGM00,1
-            #sel 2
-            开始
-            继续
-            #wait 1000
-            """);
-
+        _document = document;
         PreviousPageCommand = new RelayCommand(PreviousPage, () => PageNumber > 1);
         NextPageCommand = new RelayCommand(NextPage, () => PageNumber < TotalPages);
         SelectEventCommand = new RelayCommand<EventRowViewModel>(SelectEvent);
@@ -50,6 +44,21 @@ public sealed class EventsViewModel
     public ICommand SelectEventCommand { get; }
 
     public ICommand DuplicateSelectedCommand { get; }
+
+    private static EventDocument CreateSampleDocument()
+    {
+        return PymoScriptParser.Parse(
+            "script/start.txt",
+            """
+            #say 旁白,欢迎使用 CPyMO Editor
+            #bg BG001_H,BG_FADE,500
+            #bgm BGM00,1
+            #sel 2
+            开始
+            继续
+            #wait 1000
+            """);
+    }
 
     private void PreviousPage()
     {
